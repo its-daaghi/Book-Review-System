@@ -1,0 +1,15 @@
+{% extends "book/base.html" %}
+{% block title %}Book Detail{% endblock %}
+
+{% block content %}
+<div class="card">
+  
+  <div class="card-body">
+    <h5 class="card-title">{{book.title}}</h5>
+    <p class="card-text">{{book.description}}</p>
+    <a href="{% url 'bookupdate' book.pk %}" class="btn btn-primary">Update</a>
+    <a href="{% url 'bookdelete' book.pk %}" class="btn btn-danger">Delete</a>
+    <a href="{% url 'booklist' %}" class="btn btn-primary">Back To List</a>
+  </div>
+</div>
+{% endblock content %}

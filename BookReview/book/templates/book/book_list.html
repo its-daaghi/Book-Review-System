@@ -1,0 +1,30 @@
+{% extends "book/base.html" %}
+
+
+
+{% block content %}
+
+<div class="row">
+  {% for book in books %}
+  <div class="col-md-4 mb-3">
+    <div class="card h-100">
+      <div class="card-body">
+        <h5 class="card-title">{{ book.title }}</h5>
+        <h6 class="card-subtitle mb-2 text-body-secondary">by {{book.author}}</h6>
+        <p class="card-text">
+          {{book.description|truncatewords:20}}
+        </p>
+        <div class="mt-auto">
+          <a href="{% url "bookdetail" book.pk %}" class="btn btn-primary btn-sm">View Details</a>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+
+
+
+{% endblock %}
