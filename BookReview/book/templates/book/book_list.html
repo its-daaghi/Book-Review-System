@@ -3,6 +3,16 @@
 
 
 {% block content %}
+<div class="row mb-4">
+    <div class="col">
+        <div class="btn-group">
+            <a href="{% url 'booklist' %}" class="btn btn-outline-primary {% if not request.GET.genre %}active{% endif %}">All</a>
+            <a href="?genre=fiction" class="btn btn-outline-primary {% if request.GET.genre == 'fiction' %}active{% endif %}">Fiction</a>
+            <a href="?genre=technology" class="btn btn-outline-primary {% if request.GET.genre == 'technology' %}active{% endif %}">Technology</a>
+            <a href="?genre=science" class="btn btn-outline-primary {% if request.GET.genre == 'science' %}active{% endif %}">Science</a>
+        </div>
+    </div>
+</div>
 
 <div class="row">
   {% for book in books %}

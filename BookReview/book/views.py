@@ -12,6 +12,14 @@ class BookCreateView(View):
         form = bookForm()
         return render(request, "book/book_form.html", {"form": form})
 
+    def post(self, request):
+        form = bookForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Book created successfully")
+            redirect("booklist")
+        return render(request, "book/book_form.html", {"form": form})
+
 
 # def Book_create(request):
 #     if request.method == "POST":
@@ -30,6 +38,15 @@ class BookCreateView(View):
 class BookListView(TemplateView):
     template_name = "book/book_list.html"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        genre = self.request.GET.get("genre")
+        if genre:
+            context["books"] = Book.objects.filter(genre=genre).order_by("-created_at")
+        else:
+            context["books"] = Book.objects.all().order_by("-created_at")
+        return context
+
 
 # def booklist(request):
 
@@ -40,6 +57,12 @@ class BookListView(TemplateView):
 class BookDetailView(TemplateView):
     template_name = "book/book_detail.html "
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        pk = kwargs.get("pk")
+        context["book"] = Book.objects.get(pk=pk)
+        return context
+
 
 # def bookdetail(request, pk):
 #     book = Book.objects.get(pk=pk)
@@ -49,7 +72,17 @@ class BookDetailView(TemplateView):
 
 class BookUpdateView(View):
     def get(self, request, pk):
-        form = bookForm
+        book = Book.objects.get(pk=pk)
+        form = bookForm(instance=book)
+        return render(request, "book/book_form.html", {"form": form})
+
+    def post(self, request, pk):
+        book = Book.objects.get(pk=pk)
+        form = bookForm(request.POST, instance=book)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Book Updated successfully")
+            redirect("booklist")
         return render(request, "book/book_form.html", {"form": form})
 
 
@@ -73,6 +106,8 @@ class BookDeleteView(RedirectView):
 
     def get_redirect_url(self, *args, **kwargs):
         pk = kwargs.get("pk")
+        book = Book.objects.get(pk=pk)
+        book.delete()
         messages.success(self.request, "Book Deleted Successfully")
         return super().get_redirect_url()
 
